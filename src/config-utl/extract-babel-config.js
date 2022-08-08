@@ -85,17 +85,18 @@ function getConfig(pBabelConfigFileName) {
  *                 when the babel config is invalid OR
  *                 when dependency-cruiser can't yet process it
  */
-module.exports = function extractBabelConfig(pBabelConfigFileName) {
+module.exports = function extractBabelConfig(pBabelConfigFileName, lConfig) {
   let lReturnValue = {};
   const babel = tryRequire("@babel/core", supportedTranspilers.babel);
 
-  if (babel) {
-    const lConfig = {
-      ...getConfig(pBabelConfigFileName),
-      // under some circumstances babel (and/ or its plugins) really likes to
-      // have a filename to go with the config - so we pass it
-      filename: pBabelConfigFileName,
-    };
+  lConfig = lConfig || {
+    ...getConfig(pBabelConfigFileName),
+    // under some circumstances babel (and/ or its plugins) really likes to
+    // have a filename to go with the config - so we pass it
+    filename: pBabelConfigFileName || "babel.config.js",
+  };
+
+  if (babel) {   
     lReturnValue = {
       ...babel.loadOptions(lConfig),
       // according to the babel documentation a config parsed & expanded through

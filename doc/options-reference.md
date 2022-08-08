@@ -650,6 +650,19 @@ by telling it where your babel config lives, like this:
 }
 ```
 
+Alternatively you can pass configuration directly into dependency-cruiser via the
+`config` option: 
+
+```json
+"options": {
+  "babelConfig": {
+    "config": {
+      "presets": ["my-present-here"]
+    }
+  }
+}
+```
+
 That way dependency-cruiser will use the babel compiler for its transpilation
 steps, so if you're using features that are not TC39 stage 4 yet dependency-cruiser
 will happily analyze these source files for you.

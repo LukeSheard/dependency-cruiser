@@ -16,6 +16,7 @@ const io = require("./utl/io");
 const formatMetaInfo = require("./format-meta-info");
 const setUpCliFeedbackListener = require("./listeners/cli-feedback");
 const setUpPerformanceLogListener = require("./listeners/performance-log");
+const defaults = require("./defaults");
 
 function extractResolveOptions(pCruiseOptions) {
   let lResolveOptions = {};
@@ -66,18 +67,24 @@ function extractTSConfigOptions(pCruiseOptions) {
 }
 
 function extractBabelConfigOptions(pCruiseOptions) {
-  let lReturnValue = {};
   const lBabelConfigFileName = get(
     pCruiseOptions,
     "ruleSet.options.babelConfig.fileName",
     null
   );
 
-  if (lBabelConfigFileName) {
-    lReturnValue = extractBabelConfig(lBabelConfigFileName);
+  const lBabelConfig = get(
+    pCruiseOptions,
+    "ruleSet.options.babelConfig.config",
+    null
+  );
+
+  if (lBabelConfigFileName || lBabelConfig) {
+    // ensure we always pass in a babel config filename even if we only have a config
+    return extractBabelConfig(lBabelConfigFileName || defaults.BABEL_CONFIG, lBabelConfig);
   }
 
-  return lReturnValue;
+  return {};
 }
 
 function setUpListener(pCruiseOptions) {
